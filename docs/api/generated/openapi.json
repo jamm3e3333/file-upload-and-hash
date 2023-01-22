@@ -1,0 +1,389 @@
+{
+  "openapi" : "3.0.2",
+  "info" : {
+    "description" : "Application for calculating the file sha1 hash and the file size\n# Error codes\n\n### Description of codes for `422 Unprocessable entity` responses\n\n| Code | Description |\n|---|---|\n| U4000 | User already exists. |\n| U4001 | Invalid password. Password must contain minimum eight characters, must have at least one uppercase letter, one lowercase letter, at least one number and no special character. |\n",
+    "title" : "File upload",
+    "version" : "1.0.0"
+  },
+  "servers" : [ {
+    "url" : "/"
+  } ],
+  "paths" : {
+    "/" : {
+      "get" : {
+        "operationId" : "greetingFromServer",
+        "responses" : {
+          "200" : {
+            "content" : {
+              "text/plain" : {
+                "schema" : {
+                  "enum" : [ "Hello" ],
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "ok"
+          }
+        },
+        "summary" : "Testing endpoint",
+        "tags" : [ "App" ]
+      }
+    },
+    "/api/v1/sessions" : {
+      "post" : {
+        "operationId" : "createSession",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/createSession_request"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/createSession_200_response"
+                }
+              }
+            },
+            "description" : "ok"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/HttpError"
+                }
+              }
+            },
+            "description" : "Request not processed - bad_request"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/HttpError"
+                }
+              }
+            },
+            "description" : "Unauthenticated"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/HttpError"
+                }
+              }
+            },
+            "description" : "Entity not found - not_found"
+          }
+        },
+        "summary" : "Login user and obtain a JWT token",
+        "tags" : [ "Sessions" ]
+      }
+    },
+    "/api/v1/users" : {
+      "post" : {
+        "operationId" : "createUser",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/createSession_request"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/createSession_200_response"
+                }
+              }
+            },
+            "description" : "ok"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/HttpError"
+                }
+              }
+            },
+            "description" : "Request not processed - bad_request"
+          },
+          "422" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/createUser_422_response"
+                }
+              }
+            },
+            "description" : "Invalid data"
+          }
+        },
+        "summary" : "Create a new user",
+        "tags" : [ "Users" ]
+      }
+    },
+    "/api/v1/uploads" : {
+      "post" : {
+        "operationId" : "uploadFile",
+        "requestBody" : {
+          "content" : {
+            "multipart/form-data" : {
+              "encoding" : {
+                "files" : {
+                  "contentType" : "application/pdf",
+                  "style" : "form"
+                }
+              },
+              "schema" : {
+                "$ref" : "#/components/schemas/uploadFile_request"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "items" : {
+                    "$ref" : "#/components/schemas/uploadFile_200_response_inner"
+                  },
+                  "type" : "array"
+                }
+              }
+            },
+            "description" : "ok"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/HttpError"
+                }
+              }
+            },
+            "description" : "Request not processed - bad_request"
+          },
+          "401" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/HttpError"
+                }
+              }
+            },
+            "description" : "Unauthenticated"
+          }
+        },
+        "security" : [ {
+          "bearer" : [ ]
+        } ],
+        "summary" : "Upload file, get the size of the file and sha1 hash the file",
+        "tags" : [ "Files" ]
+      }
+    }
+  },
+  "components" : {
+    "responses" : {
+      "UnauthorizedErrorResponse" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/HttpError"
+            }
+          }
+        },
+        "description" : "Unauthorized access"
+      },
+      "NotAuthenticatedErrorResponse" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/HttpError"
+            }
+          }
+        },
+        "description" : "Unauthenticated"
+      },
+      "BadRequestErrorResponse" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/HttpError"
+            }
+          }
+        },
+        "description" : "Request not processed - bad_request"
+      },
+      "NotFoundErrorResponse" : {
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/HttpError"
+            }
+          }
+        },
+        "description" : "Entity not found - not_found"
+      }
+    },
+    "schemas" : {
+      "HttpError" : {
+        "properties" : {
+          "message" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "number"
+          },
+          "errorCode" : {
+            "type" : "string"
+          },
+          "errorData" : {
+            "$ref" : "#/components/schemas/HttpError_errorData"
+          },
+          "errorClass" : {
+            "type" : "string"
+          },
+          "stack" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "U4000" : {
+        "properties" : {
+          "code" : {
+            "example" : "U4000",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "U4001" : {
+        "properties" : {
+          "code" : {
+            "example" : "U4001",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "createSession_request_user" : {
+        "properties" : {
+          "name" : {
+            "example" : "john@doe.com",
+            "type" : "string"
+          },
+          "passwd" : {
+            "example" : "myPassword",
+            "type" : "string"
+          }
+        },
+        "required" : [ "name", "passwd" ],
+        "type" : "object"
+      },
+      "createSession_request" : {
+        "properties" : {
+          "user" : {
+            "$ref" : "#/components/schemas/createSession_request_user"
+          }
+        },
+        "required" : [ "user" ],
+        "type" : "object"
+      },
+      "createSession_200_response" : {
+        "properties" : {
+          "token" : {
+            "example" : "caeb2a6a-bd1d-41cc-bfdf-5d4514ace591",
+            "type" : "string"
+          }
+        },
+        "required" : [ "token" ],
+        "type" : "object"
+      },
+      "createUser_422_response" : {
+        "anyOf" : [ {
+          "$ref" : "#/components/schemas/U4000"
+        }, {
+          "$ref" : "#/components/schemas/U4001"
+        } ]
+      },
+      "uploadFile_request_files" : {
+        "oneOf" : [ {
+          "items" : {
+            "format" : "binary",
+            "type" : "string"
+          },
+          "type" : "array"
+        }, {
+          "format" : "binary",
+          "type" : "string"
+        } ]
+      },
+      "uploadFile_request" : {
+        "properties" : {
+          "files" : {
+            "$ref" : "#/components/schemas/uploadFile_request_files"
+          }
+        },
+        "required" : [ "files" ]
+      },
+      "uploadFile_200_response_inner_file" : {
+        "properties" : {
+          "sha1Hash" : {
+            "example" : "adsfjas0f93ja3w0f9ajw3fjafasdfasd0f9j32fa09sjf",
+            "type" : "string"
+          },
+          "sizeInBytes" : {
+            "example" : "1 MB",
+            "type" : "string"
+          },
+          "name" : {
+            "example" : "myBestFile.txt",
+            "type" : "string"
+          }
+        },
+        "required" : [ "name", "sha1Hash" ],
+        "type" : "object"
+      },
+      "uploadFile_200_response_inner" : {
+        "properties" : {
+          "file" : {
+            "$ref" : "#/components/schemas/uploadFile_200_response_inner_file"
+          }
+        }
+      },
+      "HttpError_errorData" : {
+        "properties" : {
+          "message" : {
+            "type" : "string"
+          },
+          "code" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      }
+    },
+    "securitySchemes" : {
+      "bearer" : {
+        "bearerFormat" : "JWT",
+        "scheme" : "bearer",
+        "type" : "http"
+      }
+    }
+  }
+}
