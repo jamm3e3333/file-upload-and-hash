@@ -1,6 +1,6 @@
 # File upload
 
-App for uploading file and calculating the size and the sha1 hash file for users
+App for uploading file and calculating the size and the file sha1 hash for users
 
 ## 📝 API docs
 
